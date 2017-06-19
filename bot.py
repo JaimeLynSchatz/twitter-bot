@@ -1,7 +1,7 @@
 import tweepy, random
 from secrets import *
 
-auth = tweepy.OAuthHanlder(C_KEY, C_SECRET)
+auth = tweepy.OAuthHandler(C_KEY, C_SECRET)
 auth.set_access_token(A_TOKEN, A_TOKEN_SECRET)
 api = tweepy.API(auth)
 
@@ -13,5 +13,5 @@ tweets = [
 	"Goodnight, all. Yes, I know it's early, but it's really time."
 	]
 
-tweet_num = random.randint(0, length(tweets) -1 )
+tweet_num = random.randint(0, len(tweets) -1 )
 api.update_status(tweets[tweet_num])
