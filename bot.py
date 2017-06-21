@@ -1,4 +1,4 @@
-import tweepy, random
+import tweepy, random, schedule, time
 from secrets import *
 from tweepy import API
 
@@ -58,18 +58,24 @@ def new_user():
 	print(selected_user)
 	return selected_user
 
+def timed_tweets():
+	if random.randint(0, 1) == 1:
+		print("going to retweet edupunk")
+		retweet_edu()
+	elif random.randint(0, 1) == 1:
+		print("going to randomly tweet")
+		rand_tweet()
+	else:
+		print("going to pull a name out of a hat and retweet them")
+		retweet_user(new_user())
 
+print("Scheduled twitter bot tweets starting")
+schedule.every(7).minutes.do(timed_tweets)
+#schedule.every(1).minutes.do(print("yo"))
 
-if random.randint(0, 1) == 1:
-	print("going to retweet edupunk")
-	retweet_edu()
-elif random.randint(0, 1) == 1:
-	print("going to randomly tweet")
-	rand_tweet()
-else:
-	print("going to pull a name out of a hat and retweet them")
-	retweet_user(new_user())
-
+while True:
+	schedule.run_pending()
+	time.sleep(1)
 #make_friends()
 
 # retweet_user(new_user())
