@@ -1,4 +1,4 @@
-import tweepy, random, schedule, time
+import tweepy, random, schedule, time, markovify, sys
 from secrets import *
 from tweepy import API
 
@@ -10,19 +10,21 @@ def make_friends():
 	for follower in tweepy.Cursor(api.followers).items():
 		follower.follow()
 
-def rand_tweet():
-	tweets = [
-		"Hello, World! Are you ready for this?",
-		"Nobody expects the Spanish Inquisition!",
-		"And now for something completely different.",
-		"Hey, Siri, what's the weather going to be like today? Whoops. Wrong app.",
-		"Goodnight, all. Yes, I know it's early, but it's really time.",
-		"Sometimes, I just don't know what to say anymore.",
-		"Wow, taking a deep dive into some tutorials. Need to come up for air!"
-		]
+def rand_edison_tweet():
+	with open("edison.txt") as f:
+		text = f.read()
+	text_model = markovify.Text(text)
+	tweet = (text_model.make_short_sentence(140))
+	f.close()
+	api.update_status(tweet)
 
-	tweet_num = random.randint(0, len(tweets) -1 )
-	api.update_status(tweets[tweet_num])
+def rand_subway_tweet():
+	with open("subway.txt") as f:
+		text = f.read()
+	text_model = markovify.Text(text)
+	tweet = (text_model.make_short_sentence(140))
+	f.close()
+	api.update_status(tweet)
 
 def retweet_edu():
 	statuses = api.user_timeline('edupunkn00b')
@@ -51,7 +53,12 @@ def new_user():
 		"stephenfry",
 		"newscientist",
 		"sciencemagazine",
-		"Discovery"
+		"Discovery",
+		"DiscoverMag",
+		"ScienceNews",
+		"WIRED",
+		"SpaceX",
+		"WorldAndScience"
 		]
 
 	selected_user = random.choice(users)
@@ -64,13 +71,16 @@ def timed_tweets():
 		retweet_edu()
 	elif random.randint(0, 1) == 1:
 		print("going to randomly tweet")
-		rand_tweet()
+		if random.randint(0, 1) == 1:
+			rand_edison_tweet()
+		else:
+			rand_subway_tweet()
 	else:
 		print("going to pull a name out of a hat and retweet them")
 		retweet_user(new_user())
 
 print("Scheduled twitter bot tweets starting")
-schedule.every(7).minutes.do(timed_tweets)
+schedule.every(77).minutes.do(timed_tweets)
 #schedule.every(1).minutes.do(print("yo"))
 
 while True:
