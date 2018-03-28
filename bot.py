@@ -79,20 +79,30 @@ def rand_tweet():
 		rand_subway_tweet()
 
 def timed_tweets():
+	print("Current time: " + str(datetime.datetime.now()))
 	if random.randint(0, 1) == 1:
 		retweet_edu()
 	elif random.randint(0, 1) == 1:
 		rand_tweet()
 	else:
 		retweet_user(new_user())
-
-retweet_edu()
+try:
+	retweet_edu()
+except:
+	print("Retweet of edupunk failed")
+	rand_tweet()
 
 # rand_tweet()
 
 print("Scheduled twitter bot tweets starting at " + str(datetime.datetime.now()))
-schedule.every(47).minutes.do(timed_tweets)
-schedule.every(58).minutes.do(rand_tweet)
+try:
+	schedule.every(47).minutes.do(timed_tweets)
+except:
+	print("oops, will try again later")
+try:
+	schedule.every(58).minutes.do(rand_tweet)
+except:
+	print("oops, will try again later")
 #schedule.every(1).minutes.do(print("yo"))
 
 while True:
